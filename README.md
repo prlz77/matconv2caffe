@@ -5,11 +5,11 @@ Converts a matconvnet .mat model to the Caffe framework.
 
 It works for the following layers:
 
-- [*] conv / fc
-- [*] normalization (might have problems for `kappa != 1`)
-- [*] pool
-- [*] softmax
-- [*] ReLU
+- [x] conv / fc
+- [x] normalization (might have problems for `kappa != 1`)
+- [x] pool
+- [x] softmax
+- [x] ReLU
 - [ ] Dropout (not checked)
 
 ## Usage
