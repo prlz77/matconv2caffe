@@ -6,7 +6,7 @@ Converts a matconvnet .mat model to the Caffe framework.
 It works for the following layers:
 
 - [*] conv / fc
-- [*] normalization (might have problems for *kappa != 1*)
+- [*] normalization (might have problems for `kappa != 1`)
 - [*] pool
 - [*] softmax
 - [*] ReLU
