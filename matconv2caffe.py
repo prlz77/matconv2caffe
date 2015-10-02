@@ -80,20 +80,28 @@ last_channels = 3
 
 print 'Transfering weights...'
 for i in range(matconv_layers.size):
-    caffe_layers.add()
     layer = matconv_layers[i]
+    if layer['type'] == 'custom':
+        continue
+    caffe_layers.add()
     layer_name = str(layer['name'].item().item())
     caffe_layers[-1].name = layer_name
     log(caffe_layers[-1].name)
     
     layer_type = layer['type'].item().item()
+
+    weights_key = 'weights'    
     
     if layer_type == 'conv':
-        layer_size = layer['weights'].item()[0][0].shape[::-1]
+        if layer.dtype.fields.has_key('filters'):
+            weights_key='filters'
+            
+        layer_size = layer[weights_key][0,0].shape[::-1]
+        
         if layer_size[-2] == 1 or 'fc' in layer_name:
             protow.write_fc_layer(prototxt, layer_name, last_top, layer_size[0])
         else:
-            group = layer_size[1] == (last_channels / 2)
+            group = layer_size[1] == (last_channels / 2.)
             protow.write_conv_layer(prototxt, layer_name, last_top, 
                                     num_output=layer_size[0], 
                                     kernel_size=int(layer_size[2]),
@@ -127,7 +135,7 @@ for i in range(matconv_layers.size):
         last_top = layer_name
     # Weights
     try:
-        weights =  matconv_layers[i]['weights'].item()[0][0].copy()
+        weights =  matconv_layers[i][weights_key][0,0].copy()
         caffe_layers[-1].blobs.add()
         weights = weights.transpose((3, 2, 0, 1))
         if first_conv and layer_size[1] == 3:
@@ -143,12 +151,19 @@ for i in range(matconv_layers.size):
         log('No weights to copy in this layer')
     # Bias     
     try:
-        bias =  matconv_layers[i]['weights'].item()[0][1].copy()
+        bias =  matconv_layers[i]['biases'][0,0].copy()
         caffe_layers[-1].blobs.add()
         caffe_layers[-1].blobs[1].shape.dim.append(layer_size[0])
         caffe_layers[-1].blobs[1].data[:] = bias.astype(float).flat      
     except:
         log('No biases to copy in this layer')
+#    try:
+#        bias =  matconv_layers[i][weights_key].item()[0][1].copy()
+#        caffe_layers[-1].blobs.add()
+#        caffe_layers[-1].blobs[1].shape.dim.append(layer_size[0])
+#        caffe_layers[-1].blobs[1].data[:] = bias.astype(float).flat      
+#    except:
+#        log('No biases to copy in this layer')
 
 print 'Writting to ' + OUTPUT + ' , ' + PROTOTXT
 log('Writting to file ' + OUTPUT)
