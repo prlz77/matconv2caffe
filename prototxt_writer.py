@@ -10,8 +10,8 @@ def write_header(output, name, data, crops=1, channels=1, width=1, height=1):
     output.write('input: "' + data + '"' + nl)
     output.write('input_dim: ' + str(crops) + nl)
     output.write('input_dim: ' + str(channels) + nl)
-    output.write('input_dim: ' + str(width) + nl)
     output.write('input_dim: ' + str(height) + nl)
+    output.write('input_dim: ' + str(width) + nl)
 
 def format_param(param, value):
     if isinstance(value, str):

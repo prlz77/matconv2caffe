@@ -93,7 +93,7 @@ for i in range(matconv_layers.size):
         if layer_size[-2] == 1 or 'fc' in layer_name:
             protow.write_fc_layer(prototxt, layer_name, last_top, layer_size[0])
         else:
-            group = layer_size[1] == (last_channels / 2)
+            group = layer_size[1] == (last_channels / 2.)
             protow.write_conv_layer(prototxt, layer_name, last_top, 
                                     num_output=layer_size[0], 
                                     kernel_size=int(layer_size[2]),
