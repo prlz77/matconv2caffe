@@ -15,3 +15,6 @@ It works for the following layers:
 ## Usage
 `python matconv2caffe.py [OPTIONS] input.mat`
 
+For instance:
+
+`python matconv2caffe.py model_name.mat --caffe_prefix $HOME/git/caffe/ --output model_name`
